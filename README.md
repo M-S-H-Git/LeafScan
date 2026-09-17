@@ -7,9 +7,9 @@
 ![Accuracy](https://img.shields.io/badge/Validation%20Accuracy-94.5%25-brightgreen)
 
 ## Overview
-Plant diseases are a major cause of reduced agricultural productivity worldwide. Traditional identification relies heavily on manual inspection, which is time-consuming, costly, and often inaccessible to farmers. 
+Plant diseases are a major cause of reduced agricultural productivity worldwide. Traditional identification relies heavily on manual inspection, which is time-consuming, costly, and often inaccessible for large-scale monitoring.
 
-LeafScan addresses this problem by utilizing Artificial Intelligence and Machine Learning to automatically detect plant diseases from leaf images. By extracting color, texture, and shape characteristics, the system provides fast, accurate, and cost-effective disease diagnosis, helping farmers take timely preventive measures.
+LeafScan addresses this problem by utilizing Artificial Intelligence and Machine Learning to automatically detect plant diseases from leaf images. By extracting color, texture, and shape characteristics, the system identifies common plant diseases with high accuracy and supports decision-making for farmers and researchers.
 
 [📄 **Read the Full Technical Report (PDF)**](./LeafScan_Report.pdf)
 
@@ -55,10 +55,65 @@ The model demonstrates exceptional reliability, scoring `0.98` precision on heal
 ```bash
 # Clone the repository
 git clone https://github.com/M-S-H-Git/LeafScan.git
-cd LeafScan/LeafScan_CODE
+cd LeafScan
 
 # Install dependencies
 pip install -r requirements.txt
 
+# Install Git LFS if you are using the trained model file from the repository
+# This is required because the model file is larger than GitHub's normal file-size limits
+git lfs install
+
+git lfs pull
+
 # Run the application server
 python app.py
+```
+
+### Large Model File (plant_model.pkl)
+This project includes a trained model file named `plant_model.pkl`.
+
+Because the model is approximately 93 MB, it is tracked using Git Large File Storage (Git LFS) instead of standard Git storage.
+
+If you clone the repo on a machine that does not have Git LFS installed, the file may appear as a small pointer file instead of the actual model.
+
+To fetch the real model file:
+
+```bash
+git lfs install
+git lfs pull
+```
+
+If the model file is missing locally and you want to add it manually, make sure it is placed in the project root next to `app.py`:
+
+```text
+LeafScan/
+├── app.py
+├── disease_classifier.py
+├── feature_extractor.py
+├── plant_model.pkl
+├── .gitattributes
+└── ...
+```
+
+The application loads `plant_model.pkl` automatically on startup. If the file is not present, the app will attempt to retrain the model from the `dataset/` directory instead.
+
+### Dataset Notes
+For training or retraining the model, store your image dataset under a `dataset/` directory with class folders such as:
+
+```text
+dataset/
+├── Healthy/
+├── Early_Blight/
+├── Late_Blight/
+├── Leaf_Mold/
+├── Bacterial_Spot/
+├── Powdery_Mildew/
+├── Septoria_Leaf_Spot/
+└── Spider_Mite_Damage/
+```
+
+For very large datasets, use external storage (for example Google Drive, S3, Azure Blob Storage, or Hugging Face Datasets) instead of uploading everything directly to GitHub.
+
+### License
+This project is released under the MIT License.
